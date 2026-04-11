@@ -93,8 +93,16 @@ class UrlExtractorCrawler:
 
     def requests_and_extract_urls_incontent(self):
         url = random.choice(self.metadata['previous_url'])
+
+        url = url.strip().split("?")[0].split("#")[0]
+        if url[-1] == "/":
+            while url[-1] == "/":
+                url = url[:-1]
+            url = url + "/"
+
         if not url.startswith(self.source_url):
             return False
+        
         try:
             urls_extracted = set()
             response = scraper.get(url=url, headers=self.headers, timeout=10)
