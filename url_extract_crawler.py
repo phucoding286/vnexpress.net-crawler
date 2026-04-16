@@ -129,9 +129,10 @@ class UrlExtractorCrawler:
                         u = self.source_url[:-1] + "/" + u
                         urls_extracted.add(u)
             urls_extracted = list(urls_extracted)
+            urls_combined = urls_extracted + self.metadata["previous_url"]
+            random.shuffle(urls_combined)
+            self.metadata['previous_url'] = list(set(urls_combined))[:100]
             self.auto_write_metadata()
-            random.shuffle(self.metadata["previous_url"])
-            self.metadata['previous_url'] = urls_extracted + self.metadata["previous_url"][:100]
             return urls_extracted, url, website_content
         except:
             return "ERROR"
