@@ -67,11 +67,12 @@ def get_text(html_content: str, min_length: int = 300):
 
 
 class UrlExtractorCrawler:
-    def __init__(self, source_url: str, folder_path: str = "./url_extract_crawler_metadata", metadata_path: str = "metadata.json", metadata_write_delay=64):
+    def __init__(self, source_url: str, folder_path: str = "./url_extract_crawler_metadata", metadata_path: str = "metadata.json", metadata_write_delay=64, limit_metadata_log_context=10000):
         self.source_url = source_url
         self.folder_path = folder_path
         self.metadata_path = folder_path + "/" + metadata_path
         self.metadata_write_delay = metadata_write_delay
+        self.limit_metadata_log_context = limit_metadata_log_context
         self.crawling_times = 0
         self.headers = {
             "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36"
@@ -131,7 +132,7 @@ class UrlExtractorCrawler:
             urls_extracted = list(urls_extracted)
             urls_combined = urls_extracted + self.metadata["previous_url"]
             random.shuffle(urls_combined)
-            self.metadata['previous_url'] = list(set(urls_combined))[:100]
+            self.metadata['previous_url'] = list(set(urls_combined))[:self.limit_metadata_log_context]
             self.auto_write_metadata()
             return urls_extracted, url, website_content
         except:
