@@ -32,7 +32,8 @@ crawler = UrlExtractorCrawler(
     source_url=root_url,
     folder_path="./url_extract_crawler_metadata",
     metadata_path="metadata.json",
-    metadata_write_delay=128
+    metadata_write_delay=128,
+    limit_metadata_log_context=10_000
 )
 
 if sys.platform.startswith("win"):
@@ -86,7 +87,7 @@ while True:
 
     urls, url, html_content = package
     print(url)
-    text_content = get_text(html_content=html_content, min_length=300)
+    text_content = get_text(html_content=html_content, min_length=200)
     extract_text_result = "BAD" if not text_content else "GOOD"
     print(f"Kết quả extract text: {extract_text_result}!")
     if extract_text_result == "BAD":
