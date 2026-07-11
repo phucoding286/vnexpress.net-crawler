@@ -112,6 +112,8 @@ class UrlExtractorCrawler:
             urls_extracted = set()
             self.headers['user-agent'] = ua.random
             response = scraper.get(url=url, headers=self.headers, timeout=10)
+            if not response.headers['content-type'].startswith("text/html"):
+                return "ERROR"
             website_content = response.text
             soup = BeautifulSoup(website_content, "html.parser")
             urls_content = soup.find_all("a")

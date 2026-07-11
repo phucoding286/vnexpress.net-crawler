@@ -12,10 +12,11 @@ Module này dùng chiến lược chunk files để giảm mức sử dụng ram
 """
 
 class UrlDublicateFilter:
-    def __init__(self, folder_path="./url_dublicate_working_data", metadata_path="metadata.json", limit_lines_on_file_chunk=10000):
+    def __init__(self, root_url, folder_path="./url_dublicate_working_data", metadata_path="metadata.json", limit_lines_on_file_chunk=10000):
         self.folder_path = folder_path
         self.metadata_path = folder_path + "/" + metadata_path
         self.limit_lines_on_file_chunk = limit_lines_on_file_chunk
+        self.root_url = root_url.strip("/")
         self.init_folder_files()
         self.chkncreate_new_file_infolder()
 
@@ -50,6 +51,14 @@ class UrlDublicateFilter:
                 json.dump(obj=[], fp=file, indent=4, ensure_ascii=False)
 
     def check_dublicate_nupdate(self, url: str):
+        # tiền xử lý url đảm bảo ko bị nhiễu phía sau.
+        post = url.split(self.root_url)
+        if len(post) < 2:
+            return True # bỏ qua nếu miền khác.
+        post = post[1]
+        post = post[:1+(len(post)//2)]
+        url = self.root_url + post
+        # xử lý
         for filepath in os.listdir(self.folder_path):
             path = self.folder_path + "/" + filepath
             if self.metadata_path.endswith(filepath):
@@ -67,9 +76,9 @@ class UrlDublicateFilter:
 
 if __name__ == "__main__":
     import random
-    u = UrlDublicateFilter(limit_lines_on_file_chunk=1000)
+    u = UrlDublicateFilter(root_url="https://ababcbabc.com/", limit_lines_on_file_chunk=1000)
     for _ in range(20000):
         seq = list("qwertyuiopasdfghjklzxcvbnm")
         random.shuffle(seq)
-        seq = "".join(seq)
-        print(u.check_dublicate_nupdate(f"https://{seq}.com/"))
+        seq = "".join(seq) + "/#8294djcd/83877"
+        print(u.check_dublicate_nupdate(f"https://ababcbabc.com/{seq}"))
