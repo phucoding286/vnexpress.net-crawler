@@ -23,6 +23,7 @@ writer = JsonTextDataWriter(
     metadata=writer_metadata_path
 )
 dup_filter = UrlDublicateFilter(
+    root_url=root_url,
     limit_lines_on_file_chunk=10000,
     folder_path="./url_duplicate_working_data",
     metadata_path="metadata.json"
