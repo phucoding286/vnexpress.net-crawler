@@ -56,7 +56,7 @@ class UrlDublicateFilter:
         if len(post) < 2:
             return True # bỏ qua nếu miền khác.
         post = post[1]
-        post = post[:1+(len(post)//2)]
+        post = post[:-(1+int(len(post) * 0.1))]
         url = self.root_url + post
         # xử lý
         for filepath in os.listdir(self.folder_path):
