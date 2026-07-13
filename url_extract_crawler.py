@@ -35,36 +35,13 @@ def normalize_text(text):
 
 def get_text(html_content: str, min_length: int = 300):
     soup = BeautifulSoup(html_content, "html.parser")
-    tags = soup.find_all(["h1","h2","h3","h4","h5","h6","p"])
-    total_text = str()
-    for tag in tags:
-        text = tag.get_text(strip=True)
-        if text == "":
-            continue
-        if tag.get_text(strip=False)[-1] == "\n":
-            text = text + "\n"
-        if tag.name == "h1":
-            text = "# " + text
-        elif tag.name == "h2":
-            text = "## " + text
-        elif tag.name == "h3":
-            text = "### " + text
-        elif tag.name == "h4":
-            text = "#### " + text
-        elif tag.name == "h5":
-            text = "##### " + text
-        elif tag.name == "h6":
-            text = "###### " + text
-        total_text += text + "\n"
-    total_text = total_text.strip()
+    total_text = soup.get_text(strip=True, separator="\n")
     total_text = normalize_text(total_text)
     # print(total_text)
     # input(len(total_text.split(" ")))
     if len(total_text.split(" ")) < min_length:
         return False
     return total_text
-
-
 
 class UrlExtractorCrawler:
     def __init__(self, source_url: str, folder_path: str = "./url_extract_crawler_metadata", metadata_path: str = "metadata.json", metadata_write_delay=64, limit_metadata_log_context=10000):
